@@ -3,37 +3,63 @@
 <head>
     <title>Order #{{ order.id }}</title>
     <script src="https://js.stripe.com/v3/"></script>
-    </head>
-    <body>
-        <h1>Order #{{ order.id }}</h1>
-        <h2>Items:</h2>
-        <ul>
-            {% for item in order.items.all %}
-                <li>
-                    {{ item.name }} - {{ item.price }} 
-                </li>
-            {% empty %}
-                <li>No items</li>
-            {% endfor %}
-        </ul>
-        <h3>Total: {{ order.total_sum }}</h3>
+</head>
+<body>
+    <h1>Order #{{ order.id }}</h1>
+    <h2>Items:</h2>
+    <ul>
+        {% for item in order.items.all %}
+            <li>{{ item.name }} - {{ item.price }} EUR</li>
+        {% empty %}
+            <li>No items</li>
+        {% endfor %}
+    </ul>
 
-        {% if order.items.count > 0 %}
-            <button id="buy-order-button">Pay for Order</button>
-        {% endif %}
+    <div style="padding: 10px; margin-bottom: 20px;">
+        <p><strong>Current Discount:</strong> 
+            {% if order.discount %} {{ order.discount }} {% else %} None {% endif %}
+        </p>
+        <p><strong>Current Tax:</strong> 
+            {% if order.tax %} {{ order.tax }} {% else %} None {% endif %}
+        </p>
+    </div>
+    <!-- докинул возможность менять таксу и скидки, чтобы не хардкодить их в код -->
+    <div class="form-group">
+        <h3>Tax and Discounts</h3>
+        <form action="{% url 'update_order' order.id %}" method="POST">
+            {% csrf_token %}
+            
+            <label for="discount_id">Discount ID:</label>
+            <input type="text" id="discount_id" name="discount_id" placeholder="Enter ID">
+            <br>
+            <label for="tax_id">Tax ID:</label>
+            <input type="text" id="tax_id" name="tax_id" placeholder="Enter ID">
+            
+            <br><br>
+            <button type="submit">Apply</button>
+        </form>
+    </div>
 
-        <script type="text/javascript">
-        var stripe = Stripe('{{ stripe_public_key }}');
-        var buyButton = document.getElementById('buy-order-button');
-        
-        if (buyButton) {
-            buyButton.addEventListener('click', function() {
-                fetch('/buy_order/{{ order.id }}/', {method: 'GET'})
-                .then(response => response.json())
-                .then(session => stripe.redirectToCheckout({ sessionId: session.id }))
-                .catch(error => console.error('Error:', error));
-            });
-        }
-        </script>
-    </body>
+    <h3>Total: {{ order.total_sum }}</h3>
+
+    {% if order.items.count > 0 %}
+        <button id="buy-order-button">
+            Pay for Order
+        </button>
+    {% endif %}
+
+    <script type="text/javascript">
+      var stripe = Stripe('{{ stripe_public_key }}');
+      var buyButton = document.getElementById('buy-order-button');
+      
+      if (buyButton) {
+          buyButton.addEventListener('click', function() {
+              fetch('/buy_order/{{ order.id }}/', {method: 'GET'})
+              .then(response => response.json())
+              .then(session => stripe.redirectToCheckout({ sessionId: session.id }))
+              .catch(error => console.error('Error:', error));
+          });
+      }
+    </script>
+</body>
 </html>

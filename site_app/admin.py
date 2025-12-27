@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Item, Order
+from .models import Item, Order, Discount, Tax
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
@@ -11,3 +11,7 @@ class ItemAdmin(admin.ModelAdmin):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('id', 'created_at', 'total_sum')
+    
+
+admin.site.register(Discount)
+admin.site.register(Tax)
