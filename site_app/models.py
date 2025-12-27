@@ -5,6 +5,11 @@ class Item(models.Model):
     name: str = models.CharField(max_length=255)
     description: str = models.CharField(max_length=500)
     price: float = models.FloatField(default=0)
+    currency_choices = [
+        ('usd', 'USD'),
+        ('eur', 'EUR'),
+    ]
+    currency = models.CharField(max_length=3, choices=currency_choices, default='usd')
     
     def __str__(self):
         return f"Name: {self.name}; Price: {self.price}"

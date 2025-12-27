@@ -26,8 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-4%s3hxeai-uwtv^p=7g7fa90ew5f)u1g(+vcx^utt(hw&gqvf8'
 
-STRIPE_PUBLIC_KEY = os.getenv("pk")
-STRIPE_SECRET_KEY = os.getenv("sk")
+STRIPE_PUBLIC_KEY_USD = os.getenv('pk_usd')
+STRIPE_SECRET_KEY_USD = os.getenv('sk_usd')
+
+#ключи для аккаунта с оплатой в евро
+STRIPE_PUBLIC_KEY_EUR = os.getenv('pk_eur')
+STRIPE_SECRET_KEY_EUR = os.getenv('sk_eur')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

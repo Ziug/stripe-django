@@ -43,9 +43,8 @@
     <h3>Total: {{ order.total_sum }}</h3>
 
     {% if order.items.count > 0 %}
-        <button id="buy-order-button">
-            Pay for Order
-        </button>
+        <a href="{% url 'buy_order_intent' object.id %}">
+      <button>Order intent</button></a>
     {% endif %}
 
     <script type="text/javascript">
@@ -54,7 +53,7 @@
       
       if (buyButton) {
           buyButton.addEventListener('click', function() {
-              fetch('/buy_order/{{ order.id }}/', {method: 'GET'})
+              fetch('/buy_order_intent/{{ order.id }}', {method: 'GET'})
               .then(response => response.json())
               .then(session => stripe.redirectToCheckout({ sessionId: session.id }))
               .catch(error => console.error('Error:', error));
